@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy
+      - name: Deploy ec2-54-200-34-66.us-west-2.compute.amazonaws.com
         uses: appleboy/ssh-action@master
         with:
           host: ec2-54-200-34-66.us-west-2.compute.amazonaws.com
@@ -22,7 +22,26 @@ jobs:
             git clone https://github.com/raptor-mvk/blue-green-deploy-demo.git $DIR
             sudo chown www-data:www-data $DIR -R
             cd $DIR
-            sh ./deploy.sh
+            sh ./deploy.sh ec2-54-200-34-66.us-west-2.compute.amazonaws.com
+            cd ..
+            unlink /var/www/demo/previous
+            mv -T /var/www/demo/current /var/www/demo/previous
+            ln -s /var/www/demo/$DIR /var/www/demo/current
+            unset DIR
+      - name: Deploy ec2-54-202-6-38.us-west-2.compute.amazonaws.com
+        uses: appleboy/ssh-action@master
+        with:
+          host: ec2-54-202-6-38.us-west-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /var/www/demo
+            export DIR=$(date +%Y%m%d%H%M%S)
+            git clone https://github.com/raptor-mvk/blue-green-deploy-demo.git $DIR
+            sudo chown www-data:www-data $DIR -R
+            cd $DIR
+            sh ./deploy.sh ec2-54-202-6-38.us-west-2.compute.amazonaws.com
             cd ..
             unlink /var/www/demo/previous
             mv -T /var/www/demo/current /var/www/demo/previous

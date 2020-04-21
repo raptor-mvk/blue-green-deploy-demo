@@ -10,10 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Rollback
+      - name: Rollback ec2-54-200-34-66.us-west-2.compute.amazonaws.com
         uses: appleboy/ssh-action@master
         with:
           host: ec2-54-200-34-66.us-west-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          script: |
+            unlink /var/www/demo/current
+            mv -T /var/www/demo/previous /var/www/demo/current
+      - name: Rollback ec2-54-202-6-38.us-west-2.compute.amazonaws.com
+        uses: appleboy/ssh-action@master
+        with:
+          host: ec2-54-202-6-38.us-west-2.compute.amazonaws.com
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
