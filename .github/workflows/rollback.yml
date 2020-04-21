@@ -1,8 +1,9 @@
 name: rollback
 
 on:
-  push:
-    branches: [ master ]
+  pull_request:
+    branches: [ rollback ]
+    types: [ opened ]
 
 jobs:
   deploy:
