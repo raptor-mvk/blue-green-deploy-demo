@@ -38,7 +38,7 @@ final class UserController extends AbstractFOSRestController
         $userId = $this->userService->saveUser($login);
         [$data, $code] = $userId === null ?
             [['success' => false, 400]] :
-            [['success' => false, 'userId' => $userId], 200];
+            [['success' => 'success', 'userId' => $userId], 200];
 
         return View::create($data, $code);
     }
