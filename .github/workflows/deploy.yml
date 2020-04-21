@@ -17,8 +17,14 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
           script: |
-            cd /var/www
-            git clone https://github.com/raptor-mvk/blue-green-deploy-demo.git demo
-            sudo chown www-data:www-data demo -R
-            cd demo
+            cd /var/www/demo
+            export DIR=$(date +%Y%m%d%H%M%S)
+            git clone https://github.com/raptor-mvk/blue-green-deploy-demo.git $DIR
+            sudo chown www-data:www-data $DIR -R
+            cd $DIR
             sh ./deploy.sh
+            cd ..
+            unlink /var/www/demo/previous
+            mv -T /var/www/demo/current /var/www/demo/previous
+            ln -s /var/www/demo/$DIR /var/www/demo/current
+            unset DIR
